@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plus One Mailers — Frontend
 
-## Getting Started
+Marketing site and estimate funnel for **Plus One Mailers**, an EDDM (Every Door Direct Mail) print-and-mail service built for local businesses.
 
-First, run the development server:
+## Stack
+
+- [Next.js 16](https://nextjs.org/) (App Router)
+- TypeScript
+- Tailwind CSS v4
+- Framer Motion
+- Deployed on [Vercel](https://vercel.com)
+
+## Getting started
 
 ```bash
+cd frontend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command        | Description          |
+| -------------- | -------------------- |
+| `npm run dev`  | Development server   |
+| `npm run build`| Production build     |
+| `npm run start`| Start production     |
+| `npm run lint` | ESLint               |
 
-## Learn More
+## Deploy to Vercel
 
-To learn more about Next.js, take a look at the following resources:
+1. Push this repo to GitHub.
+2. Import the project in Vercel and set **Root Directory** to `frontend`.
+3. Deploy — no extra env vars required for the marketing site.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Site structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Section              | Purpose                                      |
+| -------------------- | -------------------------------------------- |
+| Hero                 | Primary CTA for Facebook ad traffic          |
+| Trust bar            | ROI / trust stats                            |
+| How it works         | 4-step EDDM process                          |
+| Mission              | Brand story & values                         |
+| Pricing              | Transparent volume tiers                     |
+| Estimate calculator  | Interactive pricing + lead capture form      |
+| Industries           | Vertical targeting for ad audiences          |
+| Testimonials         | Social proof (benchmark-based)               |
+| FAQ                  | Objection handling                           |
+| CTA banner           | Final conversion push                        |
 
-## Deploy on Vercel
+## Estimate API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`POST /api/estimate` accepts lead + campaign data. Leads are logged to the server console for now. Wire to your CRM (HubSpot, Resend, Airtable, etc.) in `src/app/api/estimate/route.ts`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Pricing model
+
+Rates in `src/lib/pricing.ts` are based on:
+
+- USPS EDDM retail postage: **$0.247/piece** (2026)
+- Competitive all-in bundles from $0.34–$0.52/piece by volume
+
+Update tiers as your actual print costs are finalized.
+
+## Images
+
+Hero and section images use [Unsplash](https://unsplash.com) via `next/image`. Replace with your own brand photography when ready.
