@@ -92,10 +92,10 @@ No extra env vars are required for the marketing site.
 
 Rates in `src/lib/pricing.ts` are based on:
 
-- USPS EDDM retail postage: **$0.247/piece** (2026)
-- Competitive all-in bundles from $0.34–$0.52/piece by volume
+- USPS EDDM retail postage: **$0.247/piece** (2026), included in all-in rates
+- Simple per-home tiers: **$0.85** (500+) → **$0.65** (5,000+) — all-in, no size/route multipliers in the calculator
 
-Update tiers as your actual print costs are finalized.
+Update tiers in `src/lib/pricing.ts` when rates change.
 
 ## Images
 

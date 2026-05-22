@@ -16,7 +16,7 @@ export function PageCta({
   description = "Get a free estimate in under 60 seconds. A real person follows up within one business day.",
 }: PageCtaProps) {
   return (
-    <section className="section-padding !pt-0">
+    <section className="section-padding bg-background">
       <div className="container-narrow">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -35,8 +35,8 @@ export function PageCta({
             <Button
               href={estimateHref()}
               size="lg"
-              variant="secondary"
-              className="w-full sm:w-auto !bg-white !text-brand-primary hover:!bg-white/95 shadow-xl"
+              variant="inverse"
+              className="w-full sm:w-auto"
             >
               {CTA.estimate}
               <ArrowRight className="h-5 w-5 shrink-0" />

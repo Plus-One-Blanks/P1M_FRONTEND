@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Pricing | Plus One Mailers",
   description:
-    "Transparent all-in EDDM pricing — print, USPS postage, prep, and drop-off. Volume tiers from 200 pieces with no hidden fees.",
+    "Transparent all-in EDDM pricing from $0.65–$0.85 per home. Print, USPS postage, prep, and drop-off included. Volume tiers from 500 pieces.",
   openGraph: {
     title: "EDDM Pricing | Plus One Mailers",
     description:

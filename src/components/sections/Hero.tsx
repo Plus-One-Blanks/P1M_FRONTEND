@@ -1,13 +1,26 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { BrandImageFrame } from "@/components/ui/BrandImageFrame";
 import { CTA } from "@/lib/cta";
 import { ROUTES, estimateHref } from "@/lib/nav";
 import { MARKET_STATS } from "@/lib/pricing";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Mail, Sparkles } from "lucide-react";
 import { images, srcFrom } from "@/lib/images";
-import Image from "next/image";
+
+const heroStats = [
+  {
+    value: "1–3%",
+    label: "avg. response rate for local offers",
+    highlight: true,
+  },
+  {
+    value: MARKET_STATS.uspsPostage,
+    label: "USPS postage per piece",
+    highlight: false,
+  },
+];
 
 export function Hero() {
   return (
@@ -43,8 +56,8 @@ export function Hero() {
 
             <p className="text-base sm:text-lg text-muted max-w-xl mb-6 sm:mb-8 leading-relaxed">
               Plus One Mailers is the easiest way for local businesses to launch
-              Every Door Direct Mail campaigns — pick your routes, see your price
-              instantly, and we handle print, prep, and USPS delivery.
+              Every Door Direct Mail campaigns — pick how many homes you want to
+              reach, see your price instantly, and we deliver a flyer to each one.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-10">
@@ -66,72 +79,66 @@ export function Hero() {
               </Button>
             </div>
 
-            <ul className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+            <ul className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-2 lg:flex-nowrap lg:gap-x-8">
               {[
-                `From ${MARKET_STATS.costPerPieceLow}/piece all-in`,
-                "200 piece minimum",
+                `From ${MARKET_STATS.costPerHomeLow}/home all-in`,
+                `${MARKET_STATS.minOrder.toLocaleString()} home minimum`,
                 "48-hour turnaround available",
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex items-center gap-2 text-sm text-muted"
+                  className="flex items-center gap-2 text-sm text-muted whitespace-nowrap shrink-0"
                 >
                   <CheckCircle2 className="h-4 w-4 text-brand-primary shrink-0" />
-                  {item}
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-lg mx-auto"
+            className="relative w-full max-w-lg mx-auto lg:max-w-none"
           >
-            <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-2xl shadow-brand-primary/15">
-              <Image
-                src={srcFrom(images.hero)}
-                alt={images.hero.alt}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/55 via-transparent to-transparent" />
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="hidden sm:block absolute left-2 sm:-left-8 top-1/4 glass rounded-2xl p-3 sm:p-4 shadow-xl max-w-[180px] sm:max-w-[200px]"
+            <BrandImageFrame
+              src={srcFrom(images.hero, 720, 75)}
+              alt={images.hero.alt}
+              aspect="4/3"
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
             >
-              <p className="text-xl sm:text-2xl font-semibold gradient-text">1–3%</p>
-              <p className="text-xs text-muted mt-1">
-                avg. response rate for local offers
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.65, duration: 0.5 }}
-              className="hidden sm:block absolute right-2 sm:-right-6 bottom-1/4 glass rounded-2xl p-3 sm:p-4 shadow-xl"
-            >
-              <p className="text-xl sm:text-2xl font-semibold">{MARKET_STATS.uspsPostage}</p>
-              <p className="text-xs text-muted mt-1">USPS postage per piece</p>
-            </motion.div>
-
-            <div className="sm:hidden grid grid-cols-2 gap-3 mt-4">
-              <div className="glass rounded-2xl p-3 text-center">
-                <p className="text-xl font-semibold gradient-text">1–3%</p>
-                <p className="text-[11px] text-muted mt-0.5">Avg. response rate</p>
+              <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3 rounded-2xl glass px-4 py-3 shadow-lg">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-primary text-white">
+                  <Mail className="h-5 w-5" />
+                </div>
+                <p className="text-sm font-medium text-foreground leading-snug">
+                  Every home on your routes gets your flyer.
+                </p>
               </div>
-              <div className="glass rounded-2xl p-3 text-center">
-                <p className="text-xl font-semibold">{MARKET_STATS.uspsPostage}</p>
-                <p className="text-[11px] text-muted mt-0.5">USPS per piece</p>
-              </div>
+            </BrandImageFrame>
+
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              {heroStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-border bg-card px-4 py-3.5 shadow-sm"
+                >
+                  <p
+                    className={
+                      stat.highlight
+                        ? "text-xl sm:text-2xl font-semibold gradient-text"
+                        : "text-xl sm:text-2xl font-semibold text-foreground"
+                    }
+                  >
+                    {stat.value}
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-muted mt-1 leading-snug">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>

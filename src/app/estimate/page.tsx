@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free EDDM Estimate | Plus One Mailers",
     description:
-      "Configure quantity, mailer size, routes, and design — see your all-in campaign cost in seconds.",
+      "Choose how many homes to reach and see your all-in per-home price in seconds.",
     type: "website",
   },
 };

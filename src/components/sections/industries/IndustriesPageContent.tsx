@@ -49,13 +49,17 @@ export function IndustriesPageContent() {
                   i % 2 === 1 ? "lg:order-2" : ""
                 }
               >
-                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-border shadow-lg">
+                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-border bg-brand-surface shadow-xl shadow-brand-primary/10">
                   <Image
                     src={srcFrom(industry.image)}
                     alt={industry.image.alt}
                     fill
-                    className="object-cover"
+                    className="object-cover object-center saturate-[0.88] contrast-[1.03]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-brand-primary/12 via-transparent to-brand-surface/50"
+                    aria-hidden
                   />
                 </div>
               </div>

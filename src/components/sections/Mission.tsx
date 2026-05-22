@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Heart, Shield, Zap } from "lucide-react";
-import { images, srcFrom } from "@/lib/images";
-import Image from "next/image";
 
 const values = [
   {
@@ -29,16 +27,13 @@ const values = [
 export function Mission() {
   return (
     <section className="section-padding relative overflow-hidden">
-      <div className="absolute inset-0 bg-brand-ink">
-        <Image
-          src={srcFrom(images.mission)}
-          alt={images.mission.alt}
-          fill
-          className="object-cover opacity-15"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-ink via-brand-ink/95 to-brand-primary/25" />
-      </div>
+      <div className="absolute inset-0 bg-brand-ink" />
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-ink via-brand-ink/95 to-brand-primary/30" />
+      <div
+        className="absolute inset-0 opacity-[0.35] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6bTAtNHYyaDJ2LTJoLTJ6Ii8+PC9nPjwvZz48L3N2Zz4=')]"
+        aria-hidden
+      />
+
       <div className="container-narrow relative">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div

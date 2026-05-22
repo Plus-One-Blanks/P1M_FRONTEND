@@ -28,7 +28,8 @@ export async function POST(request: Request) {
       estimate: estimate
         ? {
             total: estimate.estimatedTotal,
-            perPiece: estimate.perPiece,
+            homes: estimate.homes,
+            perHome: estimate.perHome,
             tier: estimate.tier?.name,
           }
         : null,

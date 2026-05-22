@@ -5,10 +5,13 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/Button";
 import { CTA } from "@/lib/cta";
 import {
+  DESIGN_FEE,
+  exampleCampaignTotal,
   MARKET_STATS,
-  USPS_POSTAGE_PER_PIECE,
+  MIN_ORDER_HOMES,
   VOLUME_TIERS,
 } from "@/lib/pricing";
+import { formatCurrency } from "@/lib/utils";
 import { estimateHref } from "@/lib/nav";
 import { cn, formatCurrencyDetailed } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -31,39 +34,22 @@ const included = [
 
 const addons = [
   {
-    name: "Professional design",
-    price: "From $79",
-    note: "Template-based or custom layout to EDDM specs",
-  },
-  {
-    name: "Additional carrier routes",
-    price: "+$25 each",
-    note: "Expand beyond your first route set",
+    name: "Mailer design",
+    price: `$${DESIGN_FEE}`,
+    note: "Flat rate — we create your EDDM-ready artwork to USPS specs",
   },
   {
     name: "Rush production",
     price: "Quote on request",
-    note: "Tighter timelines when print schedule allows",
+    note: "When your timeline is tight and print schedule allows",
   },
 ];
 
-const breakdown = [
-  {
-    label: "Printing",
-    desc: "Full-color on your chosen mailer size and sides",
-  },
-  {
-    label: "USPS postage",
-    desc: `${formatCurrencyDetailed(USPS_POSTAGE_PER_PIECE)}/piece at current retail EDDM rates`,
-  },
-  {
-    label: "EDDM prep",
-    desc: "Bundling, facing slips, and post office drop-off",
-  },
-  {
-    label: "Route support",
-    desc: "Mapping carrier routes and confirming piece counts",
-  },
+const includedDetail = [
+  "Full-color printing & standard mailer size",
+  "USPS EDDM postage (~$0.247/home — already in your rate)",
+  "Route mapping so home count matches real addresses",
+  "Bundling, facing slips, and post office drop-off",
 ];
 
 export function PricingPageContent() {
@@ -77,7 +63,7 @@ export function PricingPageContent() {
             <span className="gradient-text">before you commit.</span>
           </>
         }
-        description={`Rates include print, USPS postage (${formatCurrencyDetailed(USPS_POSTAGE_PER_PIECE)}/piece), prep, and drop-off. Volume discounts apply automatically — no surprise fees at checkout.`}
+        description={`One price per home — from ${MARKET_STATS.costPerHomeLow} to ${MARKET_STATS.costPerHomeHigh} depending on volume. Pick how many households you want to reach; we handle print, postage, prep, and delivery. No piece math, no route fees.`}
         actions={[
           { href: estimateHref(), label: CTA.estimate },
         ]}
@@ -85,33 +71,41 @@ export function PricingPageContent() {
 
       <section className="section-padding bg-card">
         <div className="container-narrow">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+          <motion.p {...fadeUp} className="text-center text-muted mb-8 max-w-2xl mx-auto">
+            You choose the number of homes. We make sure that many households get your
+            flyer — one simple rate, everything included.
+          </motion.p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-10">
             {VOLUME_TIERS.map((tier, i) => (
               <motion.div
                 key={tier.id}
                 {...fadeUp}
                 transition={{ ...fadeUp.transition, delay: i * 0.06 }}
                 className={cn(
-                  "relative rounded-3xl p-6 bg-background border transition-shadow",
+                  "relative rounded-3xl p-6 bg-card border transition-shadow",
                   tier.highlight
                     ? "border-brand-primary shadow-xl shadow-brand-primary/15 ring-2 ring-brand-primary/20"
                     : "border-border"
                 )}
               >
                 {tier.highlight && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-primary px-3 py-1 text-xs font-medium text-white">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-primary px-3 py-1 text-xs font-medium text-white whitespace-nowrap">
                     Most popular
                   </span>
                 )}
-                <p className="text-sm text-muted mb-1">{tier.name}</p>
+                <p className="text-sm text-muted mb-1">{tier.min.toLocaleString()} homes</p>
                 <p className="text-3xl font-semibold mb-1">
-                  {formatCurrencyDetailed(tier.ratePerPiece)}
-                  <span className="text-base font-normal text-muted">/piece</span>
+                  {formatCurrencyDetailed(tier.ratePerHome)}
+                  <span className="text-base font-normal text-muted">/home</span>
                 </p>
                 <p className="text-sm text-muted">
                   {tier.max
-                    ? `${tier.min.toLocaleString()} – ${tier.max.toLocaleString()} pieces`
-                    : `${tier.min.toLocaleString()}+ pieces`}
+                    ? `${tier.min.toLocaleString()} – ${tier.max.toLocaleString()} homes`
+                    : `${tier.min.toLocaleString()}+ homes`}
+                </p>
+                <p className="text-xs text-brand-primary font-medium mt-3">
+                  e.g. {formatCurrency(exampleCampaignTotal(tier.min))} at {tier.min.toLocaleString()}
                 </p>
               </motion.div>
             ))}
@@ -135,7 +129,7 @@ export function PricingPageContent() {
               ))}
             </ul>
             <p className="text-center sm:text-left text-sm text-muted mt-6">
-              Minimum order: {MARKET_STATS.minOrder} pieces
+              Minimum {MIN_ORDER_HOMES.toLocaleString()} homes · Final count confirmed on your ZIPs before you pay
             </p>
           </motion.div>
 
@@ -149,26 +143,22 @@ export function PricingPageContent() {
 
       <section className="section-padding">
         <div className="container-narrow">
-          <motion.div {...fadeUp} className="mb-10">
-            <p className="text-sm font-medium text-brand-primary mb-3">Breakdown</p>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-              Where your per-piece rate goes
+          <motion.div
+            {...fadeUp}
+            className="rounded-3xl border border-border bg-brand-surface/50 p-6 sm:p-10 mb-14"
+          >
+            <h2 className="text-xl font-semibold tracking-tight mb-4 text-center sm:text-left">
+              What&apos;s included in every per-home price
             </h2>
+            <ul className="grid sm:grid-cols-2 gap-3">
+              {includedDetail.map((item) => (
+                <li key={item} className="flex gap-3 text-sm text-muted">
+                  <Check className="h-4 w-4 shrink-0 text-brand-primary mt-0.5" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </motion.div>
-
-          <div className="grid sm:grid-cols-2 gap-4 mb-14">
-            {breakdown.map((row, i) => (
-              <motion.div
-                key={row.label}
-                {...fadeUp}
-                transition={{ ...fadeUp.transition, delay: i * 0.05 }}
-                className="rounded-2xl bg-card border border-border p-5 sm:p-6"
-              >
-                <p className="font-semibold mb-1">{row.label}</p>
-                <p className="text-sm text-muted leading-relaxed">{row.desc}</p>
-              </motion.div>
-            ))}
-          </div>
 
           <motion.div
             {...fadeUp}
@@ -205,7 +195,7 @@ export function PricingPageContent() {
 
       <PageCta
         title="Get your exact number in seconds"
-        description="Use the estimate tool for quantity, mailer size, and routes — then we'll confirm every line item."
+        description="Slide to your home count and see your total instantly — then we'll confirm addresses on your ZIPs."
       />
     </>
   );

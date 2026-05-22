@@ -23,17 +23,17 @@ export const faqItems: FaqItem[] = [
   {
     category: "pricing",
     q: "What's the minimum order?",
-    a: "USPS requires a minimum of 200 pieces per mailing. Our calculator starts at 200 and scales up to 10,000+ for larger campaigns.",
+    a: "USPS allows EDDM mailings as small as 200 addresses, but Plus One Mailers starts at 500 homes so we can deliver full-service print, prep, and drop-off at a fair all-in rate. Our calculator runs from 500 to 10,000+ homes with automatic volume discounts.",
   },
   {
     category: "pricing",
     q: "How is pricing calculated?",
-    a: "Your estimate includes full-color printing, USPS postage ($0.247/piece at current retail rates), EDDM prep (bundling, facing slips), and drop-off. Design and extra routes are added separately so you always know what you're paying for.",
+    a: "Your all-in rate is one price per home — printing, USPS postage (~$0.247/home at current retail rates), EDDM prep, and drop-off included. Published tiers run from $0.85/home at 500 homes down to $0.65/home at 5,000+. Optional mailer design is a flat $75 if you want us to create your artwork.",
   },
   {
     category: "pricing",
     q: "Are there hidden fees?",
-    a: "No surprise line items at checkout. Your quote breaks out print, postage, prep, routes, and optional design. If something changes (extra routes, rush print), we confirm before you approve.",
+    a: "No surprise line items. You pay for a number of homes — we deliver that many flyers. Your quote shows homes × per-home rate, plus a flat $75 design fee only if you need us to create your mailer. If anything changes before print, we confirm with you first.",
   },
   {
     category: "process",

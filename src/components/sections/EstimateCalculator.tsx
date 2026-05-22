@@ -2,19 +2,19 @@
 
 import { Button, choiceButtonStyles } from "@/components/ui/Button";
 import { CTA } from "@/lib/cta";
-import { cn, formatCurrency, formatCurrencyDetailed } from "@/lib/utils";
 import {
   calculateEstimate,
-  DESIGN_PACKAGES,
-  MAILER_SIZES,
-  PRINT_SIDES,
-  type MailerSize,
-  type PrintSides,
+  DESIGN_FEE,
+  DESIGN_OPTIONS,
+  type DesignChoice,
+  MIN_ORDER_HOMES,
 } from "@/lib/pricing";
+import { cn, formatCurrency, formatCurrencyDetailed } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
   Calculator,
   CheckCircle2,
+  Home,
   Loader2,
   Mail,
   MapPin,
@@ -23,21 +23,15 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
-const QUANTITY_PRESETS = [500, 1000, 2500, 5000];
-const HOUSEHOLDS_PER_ROUTE = 225;
+const HOME_PRESETS = [500, 1000, 2000, 3000, 5000];
 
 type EstimateCalculatorProps = {
-  /** When true, parent section supplies padding/background (estimate page) */
   embedded?: boolean;
 };
 
 export function EstimateCalculator({ embedded = false }: EstimateCalculatorProps) {
-  const [quantity, setQuantity] = useState(2500);
-  const [size, setSize] = useState<MailerSize>("6x9");
-  const [sides, setSides] = useState<PrintSides>("double");
-  const [routes, setRoutes] = useState(3);
-  const [designPackageId, setDesignPackageId] =
-    useState<(typeof DESIGN_PACKAGES)[number]["id"]>("template");
+  const [homes, setHomes] = useState(2000);
+  const [designChoice, setDesignChoice] = useState<DesignChoice>("own");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,15 +45,8 @@ export function EstimateCalculator({ embedded = false }: EstimateCalculatorProps
   const [error, setError] = useState("");
 
   const estimate = useMemo(
-    () =>
-      calculateEstimate({
-        quantity,
-        size,
-        sides,
-        routes,
-        designPackageId,
-      }),
-    [quantity, size, sides, routes, designPackageId]
+    () => calculateEstimate({ homes, designChoice }),
+    [homes, designChoice]
   );
 
   async function handleSubmit(e: React.FormEvent) {
@@ -73,7 +60,7 @@ export function EstimateCalculator({ embedded = false }: EstimateCalculatorProps
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contact: { name, email, phone, business, zipCodes, notes },
-          campaign: { quantity, size, sides, routes, designPackageId },
+          campaign: { homes, designChoice },
           estimate,
         }),
       });
@@ -95,56 +82,51 @@ export function EstimateCalculator({ embedded = false }: EstimateCalculatorProps
   }
 
   const content = (
-    <MotionSafeEstimateGrid>
-          <div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
-            <div className="rounded-3xl bg-card border border-border p-6 sm:p-8 shadow-sm">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary text-white">
-                  <Calculator className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-semibold">Campaign builder</h3>
-              </div>
-
-              <div className="space-y-8">
-                <QuantityControl
-                  quantity={quantity}
-                  setQuantity={setQuantity}
-                />
-
-                <SizeControl size={size} setSize={setSize} />
-                <SidesControl sides={sides} setSides={setSides} />
-
-                <RoutesControl routes={routes} setRoutes={setRoutes} />
-
-                <DesignControl
-                  designPackageId={designPackageId}
-                  setDesignPackageId={setDesignPackageId}
-                />
-              </div>
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 lg:items-start">
+      <div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
+        <div className="rounded-3xl bg-card border border-border p-6 sm:p-8 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary text-white">
+              <Calculator className="h-5 w-5" />
             </div>
+            <h3 className="text-lg font-semibold">How many homes?</h3>
+          </div>
+          <p className="text-sm text-muted mb-8 pl-[3.25rem] sm:pl-0 sm:ml-0">
+            One flat price per home — we match your count to real addresses on
+            USPS routes. No piece counts, route math, or hidden multipliers.
+          </p>
 
-            <LeadForm
-              name={name}
-              setName={setName}
-              email={email}
-              setEmail={setEmail}
-              phone={phone}
-              setPhone={setPhone}
-              business={business}
-              setBusiness={setBusiness}
-              zipCodes={zipCodes}
-              setZipCodes={setZipCodes}
-              notes={notes}
-              setNotes={setNotes}
-              submitting={submitting}
-              submitted={submitted}
-              error={error}
-              onSubmit={handleSubmit}
+          <div className="space-y-8">
+            <HomesControl homes={homes} setHomes={setHomes} />
+            <DesignControl
+              designChoice={designChoice}
+              setDesignChoice={setDesignChoice}
             />
           </div>
+        </div>
 
-          <EstimateSummary estimate={estimate} quantity={quantity} />
-    </MotionSafeEstimateGrid>
+        <LeadForm
+          name={name}
+          setName={setName}
+          email={email}
+          setEmail={setEmail}
+          phone={phone}
+          setPhone={setPhone}
+          business={business}
+          setBusiness={setBusiness}
+          zipCodes={zipCodes}
+          setZipCodes={setZipCodes}
+          notes={notes}
+          setNotes={setNotes}
+          submitting={submitting}
+          submitted={submitted}
+          error={error}
+          onSubmit={handleSubmit}
+        />
+      </div>
+
+      <EstimateSummary estimate={estimate} />
+    </div>
   );
 
   if (embedded) {
@@ -162,38 +144,43 @@ export function EstimateCalculator({ embedded = false }: EstimateCalculatorProps
   );
 }
 
-function MotionSafeEstimateGrid({ children }: { children: React.ReactNode }) {
-  return <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">{children}</div>;
-}
-
-function QuantityControl({
-  quantity,
-  setQuantity,
+function HomesControl({
+  homes,
+  setHomes,
 }: {
-  quantity: number;
-  setQuantity: (v: number) => void;
+  homes: number;
+  setHomes: (v: number) => void;
 }) {
   return (
     <div>
-      <MotionSafeQuantityLabel quantity={quantity} />
+      <div className="flex justify-between items-baseline mb-3">
+        <label className="text-sm font-medium flex items-center gap-2">
+          <Home className="h-4 w-4 text-brand-primary" />
+          Homes to reach
+        </label>
+        <span className="text-2xl font-semibold gradient-text">
+          {homes.toLocaleString()}
+        </span>
+      </div>
       <input
         type="range"
-        min={200}
+        min={MIN_ORDER_HOMES}
         max={10000}
         step={100}
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
+        value={homes}
+        onChange={(e) => setHomes(Number(e.target.value))}
         className="w-full"
+        aria-label="Number of homes"
       />
       <div className="flex flex-wrap gap-2 mt-3">
-        {QUANTITY_PRESETS.map((preset) => (
+        {HOME_PRESETS.map((preset) => (
           <button
             key={preset}
             type="button"
-            onClick={() => setQuantity(preset)}
+            onClick={() => setHomes(preset)}
             className={cn(
               choiceButtonStyles.pill,
-              quantity === preset
+              homes === preset
                 ? choiceButtonStyles.selected
                 : choiceButtonStyles.unselected
             )}
@@ -202,158 +189,45 @@ function QuantityControl({
           </button>
         ))}
       </div>
-    </div>
-  );
-}
-
-function MotionSafeQuantityLabel({ quantity }: { quantity: number }) {
-  return (
-    <div className="flex justify-between items-baseline mb-3">
-      <label className="text-sm font-medium">Quantity</label>
-      <span className="text-2xl font-semibold gradient-text">
-        {quantity.toLocaleString()}
-      </span>
-    </div>
-  );
-}
-
-function SizeControl({
-  size,
-  setSize,
-}: {
-  size: MailerSize;
-  setSize: (v: MailerSize) => void;
-}) {
-  return (
-    <div>
-      <label className="text-sm font-medium block mb-3">Mailer size</label>
-      <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-2">
-        {(Object.keys(MAILER_SIZES) as MailerSize[]).map((key) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setSize(key)}
-            className={cn(
-              choiceButtonStyles.base,
-              "p-3 text-left",
-              size === key
-                ? choiceButtonStyles.selected
-                : choiceButtonStyles.unselected
-            )}
-          >
-            <p className="text-sm font-medium whitespace-nowrap">
-              {MAILER_SIZES[key].label}
-            </p>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SidesControl({
-  sides,
-  setSides,
-}: {
-  sides: PrintSides;
-  setSides: (v: PrintSides) => void;
-}) {
-  return (
-    <MotionSafeSidesControl sides={sides} setSides={setSides} />
-  );
-}
-
-function MotionSafeSidesControl({
-  sides,
-  setSides,
-}: {
-  sides: PrintSides;
-  setSides: (v: PrintSides) => void;
-}) {
-  return (
-    <div>
-      <label className="text-sm font-medium block mb-3">Print sides</label>
-      <div className="flex gap-2">
-        {(Object.keys(PRINT_SIDES) as PrintSides[]).map((key) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setSides(key)}
-            className={cn(
-              choiceButtonStyles.base,
-              "flex-1 py-3 text-sm whitespace-nowrap",
-              sides === key
-                ? choiceButtonStyles.selected
-                : choiceButtonStyles.unselected
-            )}
-          >
-            {PRINT_SIDES[key].label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RoutesControl({
-  routes,
-  setRoutes,
-}: {
-  routes: number;
-  setRoutes: (v: number) => void;
-}) {
-  return (
-    <div>
-      <div className="flex justify-between items-baseline mb-3">
-        <label className="text-sm font-medium flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-brand-primary" />
-          Carrier routes
-        </label>
-        <span className="font-semibold">{routes}</span>
-      </div>
-      <input
-        type="range"
-        min={1}
-        max={20}
-        step={1}
-        value={routes}
-        onChange={(e) => setRoutes(Number(e.target.value))}
-        className="w-full"
-      />
-      <p className="text-xs text-muted mt-2">
-        ~{(routes * HOUSEHOLDS_PER_ROUTE).toLocaleString()} households estimated
+      <p className="text-xs text-muted mt-3">
+        Minimum {MIN_ORDER_HOMES.toLocaleString()} homes. We confirm the exact
+        count on your ZIPs before you pay.
       </p>
     </div>
   );
 }
 
 function DesignControl({
-  designPackageId,
-  setDesignPackageId,
+  designChoice,
+  setDesignChoice,
 }: {
-  designPackageId: (typeof DESIGN_PACKAGES)[number]["id"];
-  setDesignPackageId: (v: (typeof DESIGN_PACKAGES)[number]["id"]) => void;
+  designChoice: DesignChoice;
+  setDesignChoice: (v: DesignChoice) => void;
 }) {
   return (
     <div>
-      <label className="text-sm font-medium block mb-3">Design help</label>
+      <label className="text-sm font-medium block mb-1">Design (optional)</label>
+      <p className="text-xs text-muted mb-3">
+        Need artwork? Professional mailer design is a flat{" "}
+        {formatCurrency(DESIGN_FEE)} — your per-home rate stays the same.
+      </p>
       <div className="space-y-2">
-        {DESIGN_PACKAGES.map((pkg) => (
+        {DESIGN_OPTIONS.map((option) => (
           <button
-            key={pkg.id}
+            key={option.id}
             type="button"
-            onClick={() => setDesignPackageId(pkg.id)}
+            onClick={() => setDesignChoice(option.id)}
             className={cn(
               choiceButtonStyles.base,
               "w-full p-3 text-left flex justify-between items-center",
-              designPackageId === pkg.id
+              designChoice === option.id
                 ? choiceButtonStyles.selected
                 : choiceButtonStyles.unselected
             )}
           >
-            <span className="text-sm whitespace-nowrap">{pkg.label}</span>
+            <span className="text-sm">{option.label}</span>
             <span className="text-sm font-medium">
-              {pkg.price === 0 ? "Free" : `+$${pkg.price}`}
+              {option.price === 0 ? "Included" : `+${formatCurrency(option.price)}`}
             </span>
           </button>
         ))}
@@ -364,55 +238,48 @@ function DesignControl({
 
 function EstimateSummary({
   estimate,
-  quantity,
 }: {
   estimate: ReturnType<typeof calculateEstimate>;
-  quantity: number;
 }) {
+  const { homes, ratePerHome, tier } = estimate;
+
   return (
-    <div className="lg:col-span-2 order-1 lg:order-2">
-      <div className="lg:sticky lg:top-28 rounded-3xl bg-brand-ink text-white p-5 sm:p-8 shadow-2xl">
+    <div className="lg:col-span-2 order-1 lg:order-2 w-full">
+      <div className="rounded-3xl bg-brand-ink text-white p-5 sm:p-8 shadow-2xl">
         <p className="text-sm text-white/60 mb-2">Estimated total</p>
         <p className="text-3xl sm:text-5xl font-semibold mb-1">
           {formatCurrency(estimate.estimatedTotal)}
         </p>
         <p className="text-white/60 text-sm mb-8">
-          {formatCurrencyDetailed(estimate.perPiece)} per piece ·{" "}
-          {estimate.tier.name} tier
+          {formatCurrencyDetailed(estimate.perHome)} per home · {tier.name}{" "}
+          tier ({formatCurrencyDetailed(ratePerHome)}/home)
         </p>
 
         <ul className="space-y-3 mb-8 border-t border-white/10 pt-6">
           <SummaryRow
-            label="Print & mail (all-in)"
-            value={formatCurrency(estimate.printAndMailTotal)}
+            label={`${homes.toLocaleString()} homes × ${formatCurrencyDetailed(ratePerHome)}`}
+            value={formatCurrency(estimate.campaignTotal)}
           />
           {estimate.designFee > 0 && (
             <SummaryRow
-              label="Design"
+              label={`Design (${formatCurrency(DESIGN_FEE)} flat)`}
               value={formatCurrency(estimate.designFee)}
             />
           )}
-          {estimate.routeSetupFee > 0 && (
-            <SummaryRow
-              label="Extra routes"
-              value={formatCurrency(estimate.routeSetupFee)}
-            />
-          )}
-          <SummaryRow
-            label="Est. households reached"
-            value={estimate.estimatedReach.toLocaleString()}
-            muted
-          />
         </ul>
 
-        <div className="rounded-2xl bg-card/10 p-4 text-sm text-white/80">
+        <div className="rounded-2xl bg-card/10 p-4 text-sm text-white/80 space-y-2">
           <p>
-            <strong className="text-white">Market insight:</strong> At a 2%
-            response rate, {quantity.toLocaleString()} mailers could generate{" "}
+            <strong className="text-white">Simple math:</strong> You pay for{" "}
+            {homes.toLocaleString()} homes — we deliver {homes.toLocaleString()}{" "}
+            flyers to those addresses. Print, postage, and prep are included.
+          </p>
+          <p className="text-white/60 text-xs">
+            At a 2% response rate, that&apos;s about{" "}
             <strong className="text-brand-primary">
-              {Math.round(quantity * 0.02)} leads
+              {Math.round(homes * 0.02)} potential leads
             </strong>
-            . Many local campaigns see 100–200%+ ROI.
+            .
           </p>
         </div>
       </div>
@@ -420,19 +287,11 @@ function EstimateSummary({
   );
 }
 
-function SummaryRow({
-  label,
-  value,
-  muted,
-}: {
-  label: string;
-  value: string;
-  muted?: boolean;
-}) {
+function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
-    <li className="flex justify-between text-sm">
-      <span className={muted ? "text-white/50" : "text-white/70"}>{label}</span>
-      <span className={muted ? "text-white/50" : "font-medium"}>{value}</span>
+    <li className="flex justify-between gap-4 text-sm">
+      <span className="text-white/70">{label}</span>
+      <span className="font-medium shrink-0">{value}</span>
     </li>
   );
 }
@@ -482,8 +341,8 @@ function LeadForm({
         <CheckCircle2 className="h-14 w-14 text-brand-primary mx-auto mb-4" />
         <h3 className="text-xl font-semibold mb-2">Estimate submitted!</h3>
         <p className="text-muted max-w-md mx-auto">
-          We&apos;ll review your campaign details and follow up within one
-          business day with a confirmed quote. Check your inbox.
+          We&apos;ll confirm home counts for your ZIP codes and follow up within
+          one business day with your quote.
         </p>
       </motion.div>
     );
@@ -494,9 +353,13 @@ function LeadForm({
       onSubmit={onSubmit}
       className="rounded-3xl bg-card border border-border p-6 sm:p-8 shadow-sm"
     >
-      <h3 className="text-lg font-semibold mb-6">
-        Get your detailed quote — it&apos;s free
+      <h3 className="text-lg font-semibold mb-2">
+        Get your confirmed quote — it&apos;s free
       </h3>
+      <p className="text-sm text-muted mb-6">
+        Tell us where you want to mail. We&apos;ll verify the number of homes and
+        send a final price — no surprises.
+      </p>
 
       <div className="grid sm:grid-cols-2 gap-4 mb-4">
         <FormField
@@ -551,7 +414,7 @@ function LeadForm({
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
           className="w-full rounded-xl border border-border px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary resize-none"
-          placeholder="Timeline, offer details, previous mail experience..."
+          placeholder="Your offer, timeline, or neighborhoods you want to hit..."
         />
       </div>
 

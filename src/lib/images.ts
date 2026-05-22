@@ -8,30 +8,46 @@ export type UnsplashImage = {
   photoId: string;
   alt: string;
   defaultWidth?: number;
+  /** Unsplash+ assets are served from plus.unsplash.com */
+  premium?: boolean;
 };
 
 export function unsplashSrc(
   photoId: string,
   width = 1200,
-  quality = 80
+  quality = 80,
+  premium = false
 ): string {
-  return `https://images.unsplash.com/${photoId}?w=${width}&q=${quality}&auto=format&fit=crop`;
+  const host = premium
+    ? "https://plus.unsplash.com"
+    : "https://images.unsplash.com";
+  return `${host}/${photoId}?w=${width}&q=${quality}&auto=format&fit=crop`;
 }
 
-export function srcFrom(image: UnsplashImage, width?: number): string {
-  return unsplashSrc(image.photoId, width ?? image.defaultWidth ?? 1200);
+export function srcFrom(
+  image: UnsplashImage,
+  width?: number,
+  quality = 80
+): string {
+  return unsplashSrc(
+    image.photoId,
+    width ?? image.defaultWidth ?? 1200,
+    quality,
+    image.premium ?? false
+  );
 }
 
 export const images = {
   hero: {
     photoId: "photo-1526554850534-7c78330d5f90",
-    alt: "Stacks of envelopes and printed mail pieces ready for Every Door Direct Mail",
-    defaultWidth: 800,
+    alt: "Stacks of mail and printed flyers ready for Every Door Direct Mail delivery",
+    defaultWidth: 720,
   },
-  mission: {
-    photoId: "photo-1768487451926-1964e0365d0e",
-    alt: "Warm-lit local storefront at night in a neighborhood shopping area",
-    defaultWidth: 1920,
+  estimateBand: {
+    photoId: "premium_photo-1661335205266-18d53e04710f",
+    alt: "Business owner calculating costs with a calculator and financial documents at a desk",
+    defaultWidth: 700,
+    premium: true,
   },
   howItWorks: {
     routes: {

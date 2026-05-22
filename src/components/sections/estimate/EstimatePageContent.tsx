@@ -31,7 +31,7 @@ const trustPoints = [
     icon: Calculator,
     title: "Instant ballpark pricing",
     description:
-      "Slide quantity, size, and routes — your estimated total updates live before you submit.",
+      "Choose how many homes you want to reach — your all-in total updates live before you submit.",
   },
   {
     icon: CreditCard,
@@ -51,12 +51,12 @@ const afterSubmit = [
   {
     step: "1",
     title: "We review your routes",
-    body: "We verify carrier routes for your ZIP codes, check piece counts, and flag anything that affects postage or timing.",
+    body: "We map your ZIP codes to USPS routes and confirm exactly how many homes you'll reach — so your quote matches reality.",
   },
   {
     step: "2",
     title: "You get a confirmed quote",
-    body: "Your inbox gets a detailed breakdown — print, design, routes, and drop date options. No surprises at checkout later.",
+    body: "Your inbox gets a clear total — homes, per-home rate, optional design, and timing. No jargon, no surprise line items.",
   },
   {
     step: "3",
@@ -110,9 +110,9 @@ export function EstimatePageContent() {
             </h1>
 
             <p className="text-base sm:text-lg text-muted max-w-2xl leading-relaxed mb-8">
-              Configure your mailer, routes, and design options below — then
-              send your details for a confirmed quote. Perfect for Facebook ad
-              traffic or anyone who wants a direct link to share with their team.
+              Choose how many homes you want to reach — one flat price per
+              household, everything included. Send your ZIPs for a confirmed
+              quote. No complicated menus, just honest per-home pricing.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -178,12 +178,12 @@ export function EstimatePageContent() {
               Free estimate
             </p>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Configure your drop, see your all-in price
+              How many homes? That&apos;s your price.
             </h2>
             <p className="text-muted text-base sm:text-lg leading-relaxed">
-              Adjust quantity, mailer size, routes, and design — your estimate
-              updates instantly. Submit when you&apos;re ready for a confirmed
-              quote from our team.
+              Slide to your home count and see your total instantly. Optional
+              design help is the only add-on — we confirm the real address count
+              on your ZIPs before you commit.
             </p>
           </motion.div>
 
@@ -227,7 +227,7 @@ export function EstimatePageContent() {
               transition={{ ...fadeUp.transition, delay: 0.1 }}
               className="lg:col-span-2"
             >
-              <div className="rounded-3xl bg-brand-ink text-white p-6 sm:p-8 shadow-2xl lg:sticky lg:top-28">
+              <div className="rounded-3xl bg-brand-ink text-white p-6 sm:p-8 shadow-2xl">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary">
                     <MessageSquare className="h-5 w-5" />
@@ -291,7 +291,7 @@ export function EstimatePageContent() {
                 <p className="text-muted text-sm sm:text-base leading-relaxed max-w-2xl">
                   Full-color print, USPS postage & prep, route mapping, proof
                   approval, bundling, and facing slips — all in one transparent
-                  price per piece. Minimum order {MARKET_STATS.minOrder} pieces.
+                  price per home. Minimum {MARKET_STATS.minOrder} homes.
                 </p>
               </div>
             </div>

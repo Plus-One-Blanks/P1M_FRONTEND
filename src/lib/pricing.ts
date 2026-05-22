@@ -1,158 +1,139 @@
 /**
- * Plus One Mailers pricing model (2026)
- * Based on USPS EDDM retail postage ($0.247/piece) + competitive print/mail bundling.
- * Transparent breakdown builds trust for Facebook ad traffic.
+ * Plus One Mailers pricing — simple per-home (all-in).
+ * One price per house: print, USPS postage, prep, and delivery included.
+ * You choose how many homes; we ensure that many households receive your flyer.
  */
 
 export const USPS_POSTAGE_PER_PIECE = 0.247;
 
-export type MailerSize = "6x9" | "6.5x9" | "8.5x11";
-export type PrintSides = "single" | "double";
-
-export const MAILER_SIZES: Record<
-  MailerSize,
-  { label: string; description: string; printMultiplier: number }
-> = {
-  "6x9": {
-    label: '6×9 Postcard',
-    description: "Most popular",
-    printMultiplier: 1,
-  },
-  "6.5x9": {
-    label: '6.5×9 Postcard',
-    description: "Larger footprint",
-    printMultiplier: 1.08,
-  },
-  "8.5x11": {
-    label: '8.5×11 Flyer',
-    description: "Max impact",
-    printMultiplier: 1.35,
-  },
-};
-
-export const PRINT_SIDES: Record<PrintSides, { label: string; multiplier: number }> = {
-  single: { label: "One side", multiplier: 1 },
-  double: { label: "Two sides", multiplier: 1.45 },
-};
+/** Minimum campaign size */
+export const MIN_ORDER_HOMES = 500;
 
 export interface VolumeTier {
   id: string;
   name: string;
   min: number;
   max: number | null;
-  ratePerPiece: number;
+  ratePerHome: number;
   highlight?: boolean;
 }
 
-/** All-in per-piece rates (postage + print + prep + drop-ship) */
+/** Published all-in rates per home */
 export const VOLUME_TIERS: VolumeTier[] = [
   {
-    id: "starter",
-    name: "Starter",
-    min: 200,
+    id: "tier-500",
+    name: "500+",
+    min: 500,
     max: 999,
-    ratePerPiece: 0.52,
+    ratePerHome: 0.85,
   },
   {
-    id: "growth",
-    name: "Growth",
+    id: "tier-1000",
+    name: "1,000+",
     min: 1000,
-    max: 2499,
-    ratePerPiece: 0.44,
+    max: 1999,
+    ratePerHome: 0.8,
+  },
+  {
+    id: "tier-2000",
+    name: "2,000+",
+    min: 2000,
+    max: 2999,
+    ratePerHome: 0.75,
     highlight: true,
   },
   {
-    id: "scale",
-    name: "Scale",
-    min: 2500,
+    id: "tier-3000",
+    name: "3,000+",
+    min: 3000,
     max: 4999,
-    ratePerPiece: 0.38,
+    ratePerHome: 0.7,
   },
   {
-    id: "enterprise",
-    name: "Enterprise",
+    id: "tier-5000",
+    name: "5,000+",
     min: 5000,
     max: null,
-    ratePerPiece: 0.34,
+    ratePerHome: 0.65,
   },
 ];
 
-export const DESIGN_PACKAGES = [
-  { id: "diy", label: "Own design", price: 0 },
-  { id: "template", label: "Template", price: 79 },
-  { id: "custom", label: "Custom design", price: 149 },
+/** Flat rate when Plus One creates your mailer artwork */
+export const DESIGN_FEE = 75;
+
+export const DESIGN_OPTIONS = [
+  { id: "own", label: "I have my own artwork", price: 0 },
+  { id: "plus-one", label: "We design your mailer", price: DESIGN_FEE },
 ] as const;
 
-export function getTierForQuantity(quantity: number): VolumeTier {
-  const tier =
-    [...VOLUME_TIERS].reverse().find((t) => quantity >= t.min) ?? VOLUME_TIERS[0];
-  return tier;
+export type DesignChoice = (typeof DESIGN_OPTIONS)[number]["id"];
+
+export function getTierForHomes(homes: number): VolumeTier {
+  const qty = Math.max(MIN_ORDER_HOMES, homes);
+  return (
+    [...VOLUME_TIERS].reverse().find((t) => qty >= t.min) ?? VOLUME_TIERS[0]
+  );
 }
 
 export interface EstimateInput {
-  quantity: number;
-  size: MailerSize;
-  sides: PrintSides;
-  routes: number;
-  designPackageId: (typeof DESIGN_PACKAGES)[number]["id"];
+  /** Number of homes / mailboxes to reach */
+  homes: number;
+  designChoice: DesignChoice;
 }
 
 export interface EstimateBreakdown {
   tier: VolumeTier;
-  quantity: number;
-  postageTotal: number;
-  printAndMailTotal: number;
+  homes: number;
+  ratePerHome: number;
+  campaignTotal: number;
   designFee: number;
-  routeSetupFee: number;
-  subtotal: number;
   estimatedTotal: number;
-  perPiece: number;
-  estimatedReach: number;
-  /** Rough households per route (USPS average) */
-  householdsPerRoute: number;
+  perHome: number;
 }
 
-const ROUTE_SETUP_FEE = 25;
-const HOUSEHOLDS_PER_ROUTE = 225;
-
 export function calculateEstimate(input: EstimateInput): EstimateBreakdown {
-  const tier = getTierForQuantity(input.quantity);
-  const sizeConfig = MAILER_SIZES[input.size];
-  const sidesConfig = PRINT_SIDES[input.sides];
-  const designPkg = DESIGN_PACKAGES.find((d) => d.id === input.designPackageId)!;
+  const homes = Math.max(MIN_ORDER_HOMES, input.homes);
+  const tier = getTierForHomes(homes);
+  const ratePerHome = tier.ratePerHome;
+  const designOption = DESIGN_OPTIONS.find((d) => d.id === input.designChoice)!;
 
-  const sizeAdjustedRate =
-    tier.ratePerPiece * sizeConfig.printMultiplier * sidesConfig.multiplier;
-
-  const postageTotal = input.quantity * USPS_POSTAGE_PER_PIECE;
-  const printAndMailTotal = input.quantity * sizeAdjustedRate;
-  const designFee = designPkg.price;
-  const routeSetupFee = Math.max(0, input.routes - 1) * ROUTE_SETUP_FEE;
-  const estimatedTotal = printAndMailTotal + designFee + routeSetupFee;
-  const perPiece = estimatedTotal / input.quantity;
-  const estimatedReach = input.routes * HOUSEHOLDS_PER_ROUTE;
+  const campaignTotal = homes * ratePerHome;
+  const designFee = designOption.price;
+  const estimatedTotal = campaignTotal + designFee;
+  const perHome = estimatedTotal / homes;
 
   return {
     tier,
-    quantity: input.quantity,
-    postageTotal,
-    printAndMailTotal,
+    homes,
+    ratePerHome,
+    campaignTotal,
     designFee,
-    routeSetupFee,
-    subtotal: printAndMailTotal,
     estimatedTotal,
-    perPiece,
-    estimatedReach,
-    householdsPerRoute: HOUSEHOLDS_PER_ROUTE,
+    perHome,
   };
 }
 
-/** Industry benchmarks for ROI messaging */
+/** @deprecated Use MIN_ORDER_HOMES */
+export const MIN_ORDER_QUANTITY = MIN_ORDER_HOMES;
+
+/** @deprecated Use getTierForHomes */
+export function getTierForQuantity(quantity: number): VolumeTier {
+  return getTierForHomes(quantity);
+}
+
 export const MARKET_STATS = {
   avgResponseRate: "1–3%",
   trustDirectMail: "76%",
-  costPerPieceLow: "$0.34",
+  costPerHomeLow: "$0.65",
+  costPerHomeHigh: "$0.85",
+  /** @deprecated Use costPerHomeLow */
+  costPerPieceLow: "$0.65",
   uspsPostage: "$0.247",
-  minOrder: 200,
+  minOrder: MIN_ORDER_HOMES,
   typicalRoi: "100–200%+",
 } as const;
+
+export function exampleCampaignTotal(homes: number): number {
+  const tier = getTierForHomes(homes);
+  return homes * tier.ratePerHome;
+}

@@ -52,13 +52,17 @@ export function HowItWorksPageContent() {
                   transition={{ ...fadeUp.transition, delay: i * 0.06 }}
                   className="rounded-3xl overflow-hidden bg-brand-surface border border-border"
                 >
-                  <div className="relative h-52 overflow-hidden">
+                  <div className="relative h-52 overflow-hidden bg-brand-surface">
                     <Image
                       src={srcFrom(step.image)}
                       alt={step.image.alt}
                       fill
-                      className="object-cover"
+                      className="object-cover object-center saturate-[0.88] contrast-[1.03]"
                       sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-brand-primary/12 via-transparent to-brand-surface/40"
+                      aria-hidden
                     />
                     <div className="absolute top-4 left-4 flex h-11 w-11 items-center justify-center rounded-xl bg-white/95 shadow text-brand-primary">
                       <Icon className="h-5 w-5" />
@@ -173,7 +177,7 @@ export function HowItWorksPageContent() {
 
       <PageCta
         title="See your price before you commit"
-        description="Use the free estimate tool to configure quantity, size, and routes — then get a confirmed quote from our team."
+        description="Use the free estimate tool — pick your home count and get a confirmed quote from our team."
       />
     </>
   );

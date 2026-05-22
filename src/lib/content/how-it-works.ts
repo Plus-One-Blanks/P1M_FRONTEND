@@ -52,7 +52,7 @@ export const howItWorksSteps: HowItWorksStep[] = [
 export const youProvide = [
   "Target ZIP codes or neighborhood description",
   "Your offer (discount, grand opening, seasonal promo, etc.)",
-  "Artwork or a design brief — we can design from $79",
+  "Artwork or a design brief — we can design your mailer for a flat $75",
   "Approval on the digital proof before print",
 ];
 

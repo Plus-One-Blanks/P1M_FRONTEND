@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { CTA } from "@/lib/cta";
+import { BrandImageFrame } from "@/components/ui/BrandImageFrame";
 import { images, srcFrom } from "@/lib/images";
 import { ROUTES, estimateHref } from "@/lib/nav";
 import { cn } from "@/lib/utils";
@@ -16,8 +17,6 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import Image from "next/image";
-
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
@@ -123,16 +122,12 @@ export function AboutContent() {
               transition={{ ...fadeUp.transition, delay: 0.1 }}
               className="relative"
             >
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl shadow-brand-primary/10 border border-border">
-                <Image
-                  src={srcFrom(images.about.hero, 900)}
-                  alt={images.about.hero.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                />
-              </div>
+              <BrandImageFrame
+                src={srcFrom(images.about.hero, 900)}
+                alt={images.about.hero.alt}
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
               <div className="absolute -bottom-4 -left-2 sm:left-4 glass rounded-2xl px-5 py-4 shadow-lg max-w-[240px]">
                 <p className="text-sm font-medium text-foreground leading-snug">
                   &ldquo;We mail for our own businesses first — then for yours.&rdquo;
@@ -177,13 +172,11 @@ export function AboutContent() {
             <motion.div
               {...fadeUp}
               transition={{ ...fadeUp.transition, delay: 0.08 }}
-              className="order-1 lg:order-2 relative aspect-[5/4] rounded-3xl overflow-hidden border border-border shadow-lg"
+              className="order-1 lg:order-2"
             >
-              <Image
+              <BrandImageFrame
                 src={srcFrom(images.about.story, 800)}
                 alt={images.about.story.alt}
-                fill
-                className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 45vw"
               />
             </motion.div>
