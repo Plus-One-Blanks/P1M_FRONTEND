@@ -1,6 +1,7 @@
 import { ScrollToTopOnLoad } from "@/components/layout/ScrollToTopOnLoad";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -57,14 +58,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full scroll-smooth`}>
-      <head>
-        <script
+      <body className="min-h-full flex flex-col antialiased">
+        <Script
+          id="scroll-to-top-on-reload"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){if("scrollRestoration"in history)history.scrollRestoration="manual";var n=performance.getEntriesByType("navigation")[0];if(n&&n.type==="reload"){window.scrollTo(0,0);if(location.hash)history.replaceState(null,"",location.pathname+location.search)}})();`,
           }}
         />
-      </head>
-      <body className="min-h-full flex flex-col antialiased">
         <ScrollToTopOnLoad />
         {children}
       </body>

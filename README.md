@@ -31,9 +31,43 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy to Vercel
 
-1. Push this repo to GitHub.
-2. Import the project in Vercel and set **Root Directory** to `frontend`.
-3. Deploy — no extra env vars required for the marketing site.
+### Option A — Deploy `P1M_FRONTEND` (recommended)
+
+This folder is the Next.js app. Connect Vercel to **`Plus-One-Blanks/P1M_FRONTEND`** on GitHub.
+
+| Setting | Value |
+|--------|--------|
+| **Root Directory** | `.` (leave empty / repo root) |
+| **Framework Preset** | Next.js |
+| **Build Command** | `next build` (default) |
+| **Output Directory** | *(leave empty — do not set `.next`)* |
+| **Install Command** | `npm install` (default) |
+
+### Option B — Deploy the parent `P1MAILERS` monorepo
+
+If the Vercel project points at the parent repo (with a `frontend/` folder):
+
+| Setting | Value |
+|--------|--------|
+| **Root Directory** | `frontend` |
+| **Framework Preset** | Next.js |
+| **Output Directory** | *(leave empty)* |
+
+Then redeploy.
+
+### Fix for 404 after deploy
+
+A **404 on `*.vercel.app`** almost always means Vercel is not building the Next app:
+
+1. Open **Vercel → Project → Settings → General → Root Directory**
+   - Use `.` for `P1M_FRONTEND`, or `frontend` for the monorepo.
+2. Open **Build & Development Settings**
+   - Clear **Output Directory** if anything is set (e.g. `public`, `out`, `.next`).
+   - Framework must be **Next.js**, not “Other”.
+3. **Deployments → latest → View Build Logs** — confirm `next build` succeeds.
+4. **Redeploy** (Deployments → … → Redeploy).
+
+No extra env vars are required for the marketing site.
 
 ## Site structure
 
