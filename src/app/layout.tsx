@@ -1,4 +1,5 @@
 import { ScrollToTopOnLoad } from "@/components/layout/ScrollToTopOnLoad";
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import Script from "next/script";
@@ -68,6 +69,7 @@ export default function RootLayout({
         />
         <ScrollToTopOnLoad />
         {children}
+        <Analytics />
       </body>
     </html>
   );
