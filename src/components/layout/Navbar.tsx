@@ -3,20 +3,11 @@
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { Button } from "@/components/ui/Button";
 import { CTA } from "@/lib/cta";
+import { ESTIMATE_PAGE, navLinks } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const navLinks = [
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#industries", label: "Industries" },
-  { href: "#faq", label: "FAQ" },
-];
-
-function scrollToEstimate() {
-  document.getElementById("estimate")?.scrollIntoView({ behavior: "smooth" });
-}
 
 function HamburgerIcon({ open }: { open: boolean }) {
   return (
@@ -44,6 +35,7 @@ function HamburgerIcon({ open }: { open: boolean }) {
 }
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -90,7 +82,12 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-muted hover:text-foreground transition-colors"
+                className={cn(
+                  "text-sm transition-colors",
+                  pathname === link.href
+                    ? "text-foreground font-medium"
+                    : "text-muted hover:text-foreground"
+                )}
               >
                 {link.label}
               </Link>
@@ -98,7 +95,7 @@ export function Navbar() {
           </div>
 
           <div className="hidden md:block shrink-0">
-            <Button size="sm" onClick={scrollToEstimate}>
+            <Button size="sm" href={ESTIMATE_PAGE}>
               {CTA.estimate}
             </Button>
           </div>
@@ -131,7 +128,12 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="rounded-xl px-4 py-3.5 text-base font-medium text-foreground hover:bg-brand-surface active:bg-brand-surface transition-colors"
+                  className={cn(
+                    "rounded-xl px-4 py-3.5 text-base font-medium transition-colors",
+                    pathname === link.href
+                      ? "bg-brand-surface text-foreground"
+                      : "text-foreground hover:bg-brand-surface active:bg-brand-surface"
+                  )}
                   onClick={closeMenu}
                 >
                   {link.label}
@@ -142,10 +144,8 @@ export function Navbar() {
               <Button
                 className="w-full"
                 size="lg"
-                onClick={() => {
-                  closeMenu();
-                  scrollToEstimate();
-                }}
+                href={ESTIMATE_PAGE}
+                onClick={closeMenu}
               >
                 {CTA.estimate}
               </Button>

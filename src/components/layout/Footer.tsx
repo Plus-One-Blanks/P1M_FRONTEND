@@ -1,12 +1,6 @@
 import { BrandLogo } from "@/components/ui/BrandLogo";
+import { footerLinks } from "@/lib/nav";
 import Link from "next/link";
-
-const footerLinks = [
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#estimate", label: "Get estimate" },
-  { href: "#faq", label: "FAQ" },
-];
 
 export function Footer() {
   return (

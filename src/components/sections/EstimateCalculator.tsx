@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
+import { Button, choiceButtonStyles } from "@/components/ui/Button";
 import { CTA } from "@/lib/cta";
 import { cn, formatCurrency, formatCurrencyDetailed } from "@/lib/utils";
 import {
@@ -26,7 +26,12 @@ import { useMemo, useState } from "react";
 const QUANTITY_PRESETS = [500, 1000, 2500, 5000];
 const HOUSEHOLDS_PER_ROUTE = 225;
 
-export function EstimateCalculator() {
+type EstimateCalculatorProps = {
+  /** When true, parent section supplies padding/background (estimate page) */
+  embedded?: boolean;
+};
+
+export function EstimateCalculator({ embedded = false }: EstimateCalculatorProps) {
   const [quantity, setQuantity] = useState(2500);
   const [size, setSize] = useState<MailerSize>("6x9");
   const [sides, setSides] = useState<PrintSides>("double");
@@ -89,23 +94,8 @@ export function EstimateCalculator() {
     }
   }
 
-  return (
-    <section id="estimate" className="section-padding">
-      <div className="container-narrow">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <p className="text-sm font-medium text-brand-primary mb-3">
-            Free estimate
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
-            See your campaign cost in seconds
-          </h2>
-          <p className="text-muted text-lg">
-            Adjust the sliders, then submit for a detailed quote. Perfect for
-            testing offers from Facebook ads — no payment required yet.
-          </p>
-        </div>
-
-        <MotionSafeEstimateGrid>
+  const content = (
+    <MotionSafeEstimateGrid>
           <div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
             <div className="rounded-3xl bg-card border border-border p-6 sm:p-8 shadow-sm">
               <div className="flex items-center gap-3 mb-8">
@@ -154,8 +144,20 @@ export function EstimateCalculator() {
           </div>
 
           <EstimateSummary estimate={estimate} quantity={quantity} />
-        </MotionSafeEstimateGrid>
+    </MotionSafeEstimateGrid>
+  );
+
+  if (embedded) {
+    return (
+      <div id="estimate" className="scroll-mt-28">
+        {content}
       </div>
+    );
+  }
+
+  return (
+    <section id="estimate" className="section-padding scroll-mt-28">
+      <div className="container-narrow">{content}</div>
     </section>
   );
 }
@@ -190,10 +192,10 @@ function QuantityControl({
             type="button"
             onClick={() => setQuantity(preset)}
             className={cn(
-              "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
-            quantity === preset
-              ? "border-brand-primary bg-brand-primary text-white"
-              : "border-border text-muted hover:border-brand-primary/40"
+              choiceButtonStyles.pill,
+              quantity === preset
+                ? choiceButtonStyles.selected
+                : choiceButtonStyles.unselected
             )}
           >
             {preset.toLocaleString()}
@@ -232,10 +234,11 @@ function SizeControl({
             type="button"
             onClick={() => setSize(key)}
             className={cn(
-              "rounded-xl border p-3 text-left transition-colors",
+              choiceButtonStyles.base,
+              "p-3 text-left",
               size === key
-                ? "border-brand-primary bg-brand-primary text-white"
-                : "border-border hover:border-brand-primary/40"
+                ? choiceButtonStyles.selected
+                : choiceButtonStyles.unselected
             )}
           >
             <p className="text-sm font-medium whitespace-nowrap">
@@ -277,10 +280,11 @@ function MotionSafeSidesControl({
             type="button"
             onClick={() => setSides(key)}
             className={cn(
-              "flex-1 rounded-xl border py-3 text-sm font-medium whitespace-nowrap transition-colors",
+              choiceButtonStyles.base,
+              "flex-1 py-3 text-sm whitespace-nowrap",
               sides === key
-                ? "border-brand-primary bg-brand-primary text-white"
-                : "border-border hover:border-brand-primary/40"
+                ? choiceButtonStyles.selected
+                : choiceButtonStyles.unselected
             )}
           >
             {PRINT_SIDES[key].label}
@@ -340,10 +344,11 @@ function DesignControl({
             type="button"
             onClick={() => setDesignPackageId(pkg.id)}
             className={cn(
-              "w-full rounded-xl border p-3 text-left flex justify-between items-center transition-colors",
+              choiceButtonStyles.base,
+              "w-full p-3 text-left flex justify-between items-center",
               designPackageId === pkg.id
-                ? "border-brand-primary bg-brand-primary text-white"
-                : "border-border hover:border-brand-primary/40"
+                ? choiceButtonStyles.selected
+                : choiceButtonStyles.unselected
             )}
           >
             <span className="text-sm whitespace-nowrap">{pkg.label}</span>

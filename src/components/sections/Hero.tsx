@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { CTA } from "@/lib/cta";
+import { ROUTES, estimateHref } from "@/lib/nav";
 import { MARKET_STATS } from "@/lib/pricing";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
@@ -50,11 +51,7 @@ export function Hero() {
               <Button
                 size="lg"
                 className="w-full sm:w-auto"
-                onClick={() =>
-                  document
-                    .getElementById("estimate")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
+                href={estimateHref()}
               >
                 {CTA.estimate}
                 <ArrowRight className="h-5 w-5 shrink-0" />
@@ -63,11 +60,7 @@ export function Hero() {
                 size="lg"
                 variant="outline"
                 className="w-full sm:w-auto"
-                onClick={() =>
-                  document
-                    .getElementById("pricing")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
+                href={ROUTES.pricing}
               >
                 {CTA.pricing}
               </Button>

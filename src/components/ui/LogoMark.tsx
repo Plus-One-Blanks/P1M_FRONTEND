@@ -27,7 +27,7 @@ export function LogoMark({
       height={72}
       className={cn("shrink-0 object-contain", sizeClasses[size], className)}
       priority={priority}
-      aria-hidden
+      unoptimized
     />
   );
 }

@@ -55,6 +55,18 @@ export const images = {
       defaultWidth: 600,
     },
   },
+  about: {
+    hero: {
+      photoId: "photo-1600880292203-757bb62b4baf",
+      alt: "Small business team collaborating around a table",
+      defaultWidth: 1200,
+    },
+    story: {
+      photoId: "photo-1556761175-b413da4baf72",
+      alt: "Family-owned shop owner greeting a customer at the counter",
+      defaultWidth: 800,
+    },
+  },
   industries: {
     restaurant: {
       photoId: "photo-1761515397055-1bba63a150d3",

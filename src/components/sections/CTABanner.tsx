@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { CTA } from "@/lib/cta";
+import { estimateHref } from "@/lib/nav";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
@@ -26,13 +27,9 @@ export function CTABanner() {
             </p>
             <Button
               size="lg"
-              variant="secondary"
-              className="w-full sm:w-auto !bg-white !text-brand-primary hover:!bg-white/95 shadow-xl"
-              onClick={() =>
-                document
-                  .getElementById("estimate")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              variant="inverse"
+              className="w-full sm:w-auto"
+              href={estimateHref()}
             >
               {CTA.estimate}
               <ArrowRight className="h-5 w-5 shrink-0" />
