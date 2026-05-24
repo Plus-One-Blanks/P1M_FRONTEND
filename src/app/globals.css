@@ -142,15 +142,15 @@ body {
 }
 
 .section-padding {
-  @apply px-4 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28;
+  @apply px-4 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24;
 }
 
 .container-narrow {
-  @apply mx-auto max-w-6xl;
+  @apply mx-auto w-full max-w-6xl;
 }
 
 .container-wide {
-  @apply mx-auto max-w-7xl;
+  @apply mx-auto w-full max-w-7xl;
 }
 
 /* Range input */

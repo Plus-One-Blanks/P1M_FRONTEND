@@ -9,15 +9,15 @@ const stats = [
 
 export function TrustBar() {
   return (
-    <section className="border-y border-border bg-card">
+    <section className="relative z-10 -mt-10 sm:-mt-14 border-y border-border bg-card shadow-lg shadow-brand-ink/5">
       <div className="container-wide px-4 sm:px-8 lg:px-12 py-10 sm:py-12">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 sm:gap-10">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center lg:text-left">
               <p className="text-2xl sm:text-4xl font-semibold gradient-text">
                 {stat.value}
               </p>
-              <p className="text-xs sm:text-sm text-muted mt-2 max-w-[160px] sm:max-w-[200px] mx-auto lg:mx-0 leading-snug">
+              <p className="text-xs sm:text-sm text-muted mt-2 max-w-[180px] sm:max-w-[220px] mx-auto lg:mx-0 leading-snug">
                 {stat.label}
               </p>
             </div>

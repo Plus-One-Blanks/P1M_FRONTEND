@@ -9,24 +9,34 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function HamburgerIcon({ open }: { open: boolean }) {
+function HamburgerIcon({
+  open,
+  inverse = false,
+}: {
+  open: boolean;
+  inverse?: boolean;
+}) {
+  const bar = inverse ? "bg-white" : "bg-foreground";
   return (
     <span className="relative flex h-5 w-5 items-center justify-center" aria-hidden>
       <span
         className={cn(
-          "absolute h-0.5 w-5 rounded-full bg-foreground transition-all duration-300",
+          "absolute h-0.5 w-5 rounded-full transition-all duration-300",
+          bar,
           open ? "top-1/2 -translate-y-1/2 rotate-45" : "top-1"
         )}
       />
       <span
         className={cn(
-          "absolute top-1/2 h-0.5 w-5 -translate-y-1/2 rounded-full bg-foreground transition-all duration-300",
+          "absolute top-1/2 h-0.5 w-5 -translate-y-1/2 rounded-full transition-all duration-300",
+          bar,
           open ? "opacity-0 scale-0" : "opacity-100"
         )}
       />
       <span
         className={cn(
-          "absolute h-0.5 w-5 rounded-full bg-foreground transition-all duration-300",
+          "absolute h-0.5 w-5 rounded-full transition-all duration-300",
+          bar,
           open ? "bottom-1/2 translate-y-1/2 -rotate-45" : "bottom-1"
         )}
       />
@@ -62,6 +72,8 @@ export function Navbar() {
   }, []);
 
   const closeMenu = () => setMobileOpen(false);
+  const isHome = pathname === "/";
+  const overHero = isHome && !scrolled;
 
   return (
     <header className="site-header fixed inset-x-0 top-0 z-50">
@@ -69,29 +81,43 @@ export function Navbar() {
         <nav
           className={cn(
             "flex items-center justify-between gap-3 rounded-2xl px-4 py-3 sm:px-5 transition-all duration-300",
-            scrolled
-              ? "glass shadow-lg shadow-black/5 border border-border/80"
-              : "border border-transparent bg-transparent shadow-none"
+            overHero
+              ? "glass-dark shadow-lg shadow-black/20 border border-white/10"
+              : scrolled
+                ? "glass shadow-lg shadow-black/5 border border-border/80"
+                : "border border-transparent bg-transparent shadow-none"
           )}
           aria-label="Main navigation"
         >
-          <BrandLogo onClick={closeMenu} priority className="min-w-0" />
+          <BrandLogo
+            onClick={closeMenu}
+            priority
+            className="min-w-0"
+            variant={overHero ? "onDark" : "default"}
+          />
 
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "text-sm transition-colors",
-                  pathname === link.href
-                    ? "text-foreground font-medium"
-                    : "text-muted hover:text-foreground"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "text-sm transition-colors",
+                    overHero
+                      ? isActive
+                        ? "text-white font-medium"
+                        : "text-white/75 hover:text-white"
+                      : isActive
+                        ? "text-foreground font-medium"
+                        : "text-muted hover:text-foreground"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="hidden md:block shrink-0">
@@ -103,15 +129,21 @@ export function Navbar() {
           <button
             type="button"
             className={cn(
-              "md:hidden relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-card shadow-sm transition-colors",
-              mobileOpen && "border-brand-primary/40 bg-brand-surface"
+              "md:hidden relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border shadow-sm transition-colors",
+              overHero
+                ? "border-white/20 bg-white/10 backdrop-blur-sm"
+                : "border-border bg-card",
+              mobileOpen &&
+                (overHero
+                  ? "border-white/40 bg-white/15"
+                  : "border-brand-primary/40 bg-brand-surface")
             )}
             onClick={() => setMobileOpen((open) => !open)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
           >
-            <HamburgerIcon open={mobileOpen} />
+            <HamburgerIcon open={mobileOpen} inverse={overHero} />
           </button>
         </nav>
 

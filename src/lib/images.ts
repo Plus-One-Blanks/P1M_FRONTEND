@@ -49,6 +49,33 @@ export const images = {
     defaultWidth: 700,
     premium: true,
   },
+  mission: {
+    photoId: "photo-1768487451926-1964e0365d0e",
+    alt: "Local storefront on a neighborhood street at dusk",
+    defaultWidth: 1920,
+  },
+  conversion: {
+    neighborhood: {
+      photoId: "photo-1592595896551-12b371d546d5",
+      alt: "Suburban neighborhood — the households your EDDM campaign reaches",
+      defaultWidth: 800,
+    },
+    localOwner: {
+      photoId: "photo-1556761175-b413da4baf72",
+      alt: "Small business owner welcoming a customer",
+      defaultWidth: 800,
+    },
+    teamPlanning: {
+      photoId: "photo-1600880292203-757bb62b4baf",
+      alt: "Local business team planning a marketing campaign together",
+      defaultWidth: 800,
+    },
+    mailboxDelivery: {
+      photoId: "photo-1578655083045-1974aed129e6",
+      alt: "Residential mailboxes along a carrier route ready for delivery",
+      defaultWidth: 900,
+    },
+  },
   howItWorks: {
     routes: {
       photoId: "photo-1578655083045-1974aed129e6",

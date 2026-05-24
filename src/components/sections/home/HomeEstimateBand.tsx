@@ -11,7 +11,7 @@ import { ArrowRight, Calculator } from "lucide-react";
 
 export function HomeEstimateBand() {
   return (
-    <section className="section-padding bg-brand-surface/40 border-y border-border/60">
+    <section className="section-padding bg-brand-surface border-y border-border/60">
       <div className="container-narrow">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
           <motion.div {...fadeUp}>

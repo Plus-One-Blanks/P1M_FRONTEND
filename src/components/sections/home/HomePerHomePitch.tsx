@@ -1,7 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { BrandImageFrame } from "@/components/ui/BrandImageFrame";
 import { CTA } from "@/lib/cta";
+import { images, srcFrom } from "@/lib/images";
 import { fadeUp } from "@/lib/motion";
 import { ROUTES, estimateHref } from "@/lib/nav";
 import { MARKET_STATS } from "@/lib/pricing";
@@ -25,14 +27,14 @@ const points = [
 
 export function HomePerHomePitch() {
   return (
-    <section className="section-padding bg-background border-b border-border/60">
+    <section className="section-padding bg-background">
       <div className="container-narrow">
         <motion.div
           {...fadeUp}
-          className="rounded-3xl border border-border bg-card p-8 sm:p-12 lg:p-14 shadow-sm"
+          className="rounded-3xl border border-border bg-card p-8 sm:p-12 lg:p-14 shadow-md shadow-brand-primary/5 overflow-hidden"
         >
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
-            <div className="max-w-xl">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+            <div>
               <div className="inline-flex items-center gap-2 rounded-full bg-brand-primary/10 px-4 py-2 text-sm font-medium text-brand-primary mb-5">
                 <Sparkles className="h-4 w-4" />
                 Why we&apos;re different
@@ -46,7 +48,10 @@ export function HomePerHomePitch() {
                 We keep it simple: choose how many homes you want to reach — we
                 make sure that many households get your flyer.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <motion.div
+                {...fadeUp}
+                className="flex flex-col sm:flex-row gap-3"
+              >
                 <Button href={estimateHref()} size="lg" className="w-full sm:w-auto">
                   {CTA.estimate}
                 </Button>
@@ -58,23 +63,35 @@ export function HomePerHomePitch() {
                 >
                   {CTA.pricing}
                 </Button>
-              </div>
+              </motion.div>
             </div>
 
-            <ul className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 lg:max-w-sm lg:w-full shrink-0">
-              {points.map((point, i) => (
-                <motion.li
-                  key={point.title}
-                  {...fadeUp}
-                  transition={{ ...fadeUp.transition, delay: i * 0.06 }}
-                  className="rounded-2xl bg-brand-surface/80 border border-border/80 p-5"
-                >
-                  <Home className="h-5 w-5 text-brand-primary mb-2" />
-                  <p className="font-medium text-foreground mb-1">{point.title}</p>
-                  <p className="text-sm text-muted leading-relaxed">{point.body}</p>
-                </motion.li>
-              ))}
-            </ul>
+            <motion.div
+              {...fadeUp}
+              transition={{ ...fadeUp.transition, delay: 0.1 }}
+              className="space-y-4"
+            >
+              <BrandImageFrame
+                src={srcFrom(images.conversion.teamPlanning, 700)}
+                alt={images.conversion.teamPlanning.alt}
+                aspect="4/3"
+                sizes="(max-width: 1024px) 100vw, 45vw"
+              />
+              <ul className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                {points.map((point) => (
+                  <li
+                    key={point.title}
+                    className="rounded-2xl bg-brand-surface/80 border border-border/80 p-4"
+                  >
+                    <Home className="h-4 w-4 text-brand-primary mb-1.5" />
+                    <p className="font-medium text-sm text-foreground mb-0.5">
+                      {point.title}
+                    </p>
+                    <p className="text-xs text-muted leading-relaxed">{point.body}</p>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
         </motion.div>
       </div>

@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export function HomeIndustries() {
   return (
-    <section id="industries" className="section-padding bg-card scroll-mt-28">
+    <section id="industries" className="section-padding bg-card border-y border-border/60 scroll-mt-28">
       <div className="container-narrow">
         <SectionHeader
           eyebrow="Who it's for"

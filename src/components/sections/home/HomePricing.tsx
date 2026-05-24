@@ -26,7 +26,7 @@ const included = [
 
 export function HomePricing() {
   return (
-    <section id="pricing" className="section-padding bg-background scroll-mt-28">
+    <section id="pricing" className="section-padding bg-background border-y border-border/60 scroll-mt-28">
       <div className="container-narrow">
         <SectionHeader
           eyebrow="Pricing"

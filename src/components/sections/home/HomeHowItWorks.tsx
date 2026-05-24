@@ -12,7 +12,7 @@ import Image from "next/image";
 
 export function HomeHowItWorks() {
   return (
-    <section id="how-it-works" className="section-padding bg-card scroll-mt-28">
+    <section id="how-it-works" className="section-padding bg-card border-y border-border/60 scroll-mt-28">
       <div className="container-narrow">
         <SectionHeader
           eyebrow="How it works"

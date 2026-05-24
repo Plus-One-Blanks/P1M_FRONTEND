@@ -97,11 +97,11 @@ export function IndustriesPageContent() {
         </div>
       </section>
 
-      <section className="section-padding">
-        <div className="container-narrow">
+      <section className="section-padding bg-background">
+        <div className="container-narrow flex flex-col gap-6 sm:gap-8">
           <motion.div
             {...fadeUp}
-            className="rounded-3xl border border-border bg-brand-surface/60 p-8 sm:p-12 text-center"
+            className="rounded-3xl border border-border bg-card p-8 sm:p-10 text-center shadow-sm"
           >
             <Sparkles className="h-8 w-8 text-brand-primary mx-auto mb-4" />
             <h2 className="text-xl sm:text-2xl font-semibold tracking-tight mb-3">
@@ -114,13 +114,14 @@ export function IndustriesPageContent() {
               we&apos;ll map routes that fit.
             </p>
           </motion.div>
+
+          <PageCta
+            embedded
+            title="Reach the neighborhoods that feed your business"
+            description="Share your ZIP codes and offer — we'll show you piece counts, pricing, and timing."
+          />
         </div>
       </section>
-
-      <PageCta
-        title="Reach the neighborhoods that feed your business"
-        description="Share your ZIP codes and offer — we'll show you piece counts, pricing, and timing."
-      />
     </>
   );
 }
